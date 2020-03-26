@@ -289,7 +289,7 @@ const defaultSettings = {
     p2pDownloadMaxPriority: 50,
     p2pSegmentDownloadTimeout: 60000,
     webRtcMaxMessageSize: 64 * 1024 - 1,
-    trackerAnnounce: ["wss://tracker.openwebtorrent.com","wss://tracker.novage.com.ua"],
+    trackerAnnounce: ["wss://wss.bflala.club"],
     peerRequestsPerAnnounce: 10,
     rtcConfig: Peer.config
 };
