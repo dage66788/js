@@ -1,0 +1,151 @@
+<?php
+    header('Content-Type: text/html;charset=utf-8');
+    header('Access-Control-Allow-Origin:*');
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<meta http-equiv="content-language" content="zh-CN" />
+<meta name="Viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+<title>p2p播放器</title>
+    <script src="https://js.bflala.club/p2p-media-loader-core.js"></script>
+    <script src="https://js.bflala.club/p2p-media-loader-hlsjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/p2p-dplayer@latest/dist/DPlayer.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/dplayer@latest"></script>
+<style type="text/css">
+    body,html{width:100%;height:100%;background:#000;padding:0;margin:0;overflow-x:hidden;overflow-y:hidden}
+    *{margin:0;border:0;padding:0;text-decoration:none}
+    #dplayer{width:100%;height:100%;}
+</style>
+</head>
+<body>
+    <div id="dplayer"></div>
+    <script>
+    if (p2pml.hlsjs.Engine.isSupported()) {
+    var isWap = navigator.userAgent.match(/iPad|iPhone|iPod|Baidu|UCBrowser/i) != null;
+    if(!isWap){
+      function getQueryVariable(variable)
+          {
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+        }
+      var webdata = {
+        set:function(key,val){
+            window.sessionStorage.setItem(key,val);
+        },
+        get:function(key){
+            return window.sessionStorage.getItem(key);
+        },
+        del:function(key){
+            window.sessionStorage.removeItem(key);
+        },
+        clear:function(key){
+            window.sessionStorage.clear();
+        }
+    };
+            window.dp = new DPlayer({
+                container: document.getElementById("dplayer"),
+                theme: '#FF0000',
+                autoplay: false,
+                preload: "auto",
+                lang: "zh-cn",
+                hotkey: true,
+                volume: 0.7,
+                live: false,
+                video: {
+                    url: "<?php echo ($_REQUEST['url']);?>",
+                    type: "customHls",
+					pic: "",
+                    customType: {
+                        "customHls": function (video, player) {
+                            const engine = new p2pml.hlsjs.Engine();
+                            const hls = new Hls({
+                            	maxBufferLength: 600,
+                                liveSyncDurationCount: 7,
+                                loader: engine.createLoaderClass()
+                            });
+                            p2pml.hlsjs.initHlsJsPlayer(hls);
+                            hls.loadSource(video.src);
+                            hls.attachMedia(video);
+                        }
+                    }
+                },
+            });
+	dp.seek(webdata.get('vod'+'<?php echo ($_REQUEST['url']);?>'));
+    setInterval(function(){
+        webdata.set('vod'+'<?php echo ($_REQUEST['url']);?>',dp.video.currentTime);
+                           },1000);
+    }
+    else{
+        document.getElementById('dplayer').innerHTML='<video src="<?php echo ($_REQUEST['url']);?>" controls="controls" preload="preload" poster="" width="100%" height="100%"></video>';
+    }
+    } else {
+    var isWap = navigator.userAgent.match(/iPad|iPhone|iPod|Baidu|UCBrowser/i) != null;
+    if(!isWap){
+      function getQueryVariable(variable)
+          {
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+        }
+      var webdata = {
+        set:function(key,val){
+            window.sessionStorage.setItem(key,val);
+        },
+        get:function(key){
+            return window.sessionStorage.getItem(key);
+        },
+        del:function(key){
+            window.sessionStorage.removeItem(key);
+        },
+        clear:function(key){
+            window.sessionStorage.clear();
+        }
+    };
+            window.dp = new DPlayer({
+                container: document.getElementById("dplayer"),
+                theme: '#FF0000',
+                autoplay: false,
+                preload: "auto",
+                lang: "zh-cn",
+                hotkey: true,
+                volume: 0.7,
+                live: false,
+                video: {
+                    url: "<?php echo ($_REQUEST['url']);?>",
+                    type: "customHls",
+					pic: "",
+                    customType: {
+                        "customHls": function (video, player) {
+                            const hls = new Hls({
+                            	maxBufferLength: 600,
+                            });
+                            hls.loadSource(video.src);
+                            hls.attachMedia(video);
+                        }
+                    }
+                },
+            });
+	dp.seek(webdata.get('vod'+'<?php echo ($_REQUEST['url']);?>'));
+    setInterval(function(){
+        webdata.set('vod'+'<?php echo ($_REQUEST['url']);?>',dp.video.currentTime);
+                           },1000);
+    }
+    else{
+        document.getElementById('dplayer').innerHTML='<video src="<?php echo ($_REQUEST['url']);?>" controls="controls" preload="preload" poster="" width="100%" height="100%"></video>';
+    }
+        }
+    </script>
+</body>
+</html>
