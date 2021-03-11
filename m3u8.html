@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="referrer" content="no-referrer" />
+<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /> 
+<title>Dplayer播放器</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cbplayer@latest/dist/CBPlayer.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/cdnbye@latest/dist/hlsjs-p2p-engine.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@0.14.16"></script>
+<script src="https://cdn.jsdelivr.net/npm/cbplayer2@latest"></script>
+<style type="text/css">
+   html,body{height:100%;margin:0;padding:0;overflow:hidden;text-align:center;background:#181818;}
+    *{margin:0;border:0;padding:0;text-decoration:none}
+        #video{height:100%;}
+  </style>
+  
+<body style="background:#000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" oncontextmenu=window.event.returnValue=false>
+<div id="video"></div>
+<script>
+          function getQueryVariable(variable)
+          {
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+        };
+    var url = getQueryVariable("url");
+    var dp = new CBPlayer({
+        container: document.getElementById('video'),
+        theme: '#FF0000',
+        autoplay: false,
+        preload: "auto",
+        lang: "zh-cn",
+        hotkey: true,
+        airplay: true,
+        volume: 0.7,
+        live: false,
+        video: {
+            url:url,
+        },
+
+        pluginOptions: {
+            hls: {
+                debug: false,
+            p2pConfig: {
+                wifiOnly: false,
+                waitForPeer: true,
+                }
+            },
+        },
+    });
+    dp.on('fullscreen', function () {
+        if (/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            screen.orientation.lock('landscape');
+        }
+    });
+</script>
+</html>
